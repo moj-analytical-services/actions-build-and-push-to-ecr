@@ -22,11 +22,10 @@ runs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
     - name: Create ECR repository if not exists
-      uses: docker://amazon/aws-cli
       env:
         ECR_REPOSITORY: ${{ github.event.repository.name }}
-      with:
-        entrypoint: ${{ github.action_path }}/scripts/create_ecr_repository.sh
+      shell: bash
+      run: ${{ github.action_path }}/scripts/create_ecr_repository.sh
     - name: Build, tag, and push image to Amazon ECR
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
