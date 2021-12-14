@@ -26,11 +26,26 @@ runs:
         ECR_REPOSITORY: ${{ github.event.repository.name }}
       shell: bash
       run: ${{ github.action_path }}/scripts/create_ecr_repository.sh
+    - name: Prepare tag
+      id: prepare-tag
+      shell: bash
+      run: |
+        IMAGE_TAG=latest
+        if [[ $GITHUB_REF == refs/tags/* ]]; then
+          IMAGE_TAG=${GITHUB_REF#refs/tags/}
+        elif [[ $GITHUB_REF == refs/heads/* ]]; then
+          IMAGE_TAG=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+        elif [[ $GITHUB_REF == refs/pull/* ]]; then
+          IMAGE_TAG=pr-${{ github.event.number }}
+        elif [ "${{ github.event_name }}" = "push" ]; then
+          IMAGE_TAG="sha-${GITHUB_SHA::7}"
+        fi
+        echo ::set-output name=image-tag::${IMAGE_TAG}
     - name: Build, tag, and push image to Amazon ECR
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ github.event.repository.name }}
-        IMAGE_TAG: ${{ github.ref_name }}
+        IMAGE_TAG: ${{ steps.prepare-tag.outputs.image-tag }}
       shell: bash
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
