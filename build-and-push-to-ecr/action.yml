@@ -26,7 +26,7 @@ runs:
       env:
         ECR_REPOSITORY: ${{ github.event.repository.name }}
       with:
-        entrypoint: ./scripts/create_ecr_repository.sh
+        entrypoint: aws ecr describe-repositories --repository-names $ECR_REPOSITORY || aws ecr create-repository --repository-name $ECR_REPOSITORY
     - name: Build, tag, and push image to Amazon ECR
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
