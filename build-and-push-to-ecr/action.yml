@@ -1,4 +1,4 @@
-name: Build and push to ECR
+name: Build, tag, and push image to Amazon ECR
 description: Build and tag a Docker image and push it to Amazon ECR
 inputs:
   role-to-assume:
@@ -21,13 +21,14 @@ runs:
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
-    - name: Create ECR repository if not exists
+    - name: Create Amazon ECR repository if not exists
       env:
         ECR_REPOSITORY: ${{ github.event.repository.name }}
       shell: bash
-      run: ${{ github.action_path }}/scripts/create_ecr_repository.sh
-    - name: Prepare tag
-      id: prepare-tag
+      run: |
+        aws ecr describe-repositories --repository-names $ECR_REPOSITORY || aws ecr create-repository --repository-name $ECR_REPOSITORY
+    - name: Prepare image tag
+      id: prepare-image-tag
       shell: bash
       run: |
         IMAGE_TAG=latest
@@ -45,7 +46,7 @@ runs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ github.event.repository.name }}
-        IMAGE_TAG: ${{ steps.prepare-tag.outputs.image-tag }}
+        IMAGE_TAG: ${{ steps.prepare-image-tag.outputs.image-tag }}
       shell: bash
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
