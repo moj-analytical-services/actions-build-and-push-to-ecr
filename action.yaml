@@ -23,7 +23,7 @@ runs:
       uses: aws-actions/amazon-ecr-login@v1
     - name: Create Amazon ECR repository if not exists
       env:
-        ECR_REPOSITORY: ${{ github.event.repository.name }}
+        ECR_REPOSITORY: awk 'print tolower(${{ github.event.repository.name }})'
       shell: bash
       run: |
         aws ecr describe-repositories --repository-names $ECR_REPOSITORY || aws ecr create-repository --repository-name $ECR_REPOSITORY
