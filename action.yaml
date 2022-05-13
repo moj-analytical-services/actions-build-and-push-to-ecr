@@ -47,7 +47,7 @@ runs:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ github.event.repository.name }}
         IMAGE_TAG: ${{ steps.prepare-image-tag.outputs.image-tag }}
-        DE_ECR: ${{ secrets. }}
+        DE_ECR: ${{ secrets.DE_ECR }}
       shell: bash
       run: |
         docker build . -t $ECR_REGISTRY/${ECR_REPOSITORY,,}:$IMAGE_TAG --build-arg DE_ECR=${DE_ECR}
