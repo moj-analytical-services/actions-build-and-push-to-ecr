@@ -26,7 +26,7 @@ runs:
         ECR_REPOSITORY: ${{ github.event.repository.name }}
       shell: bash
       run: |
-        aws ecr describe-repositories --repository-names $ECR_REPOSITORY || aws ecr create-repository --repository-name $ECR_REPOSITORY
+        aws ecr describe-repositories --repository-names ${ECR_REPOSITORY,,} || aws ecr create-repository --repository-name ${ECR_REPOSITORY,,}
     - name: Prepare image tag
       id: prepare-image-tag
       shell: bash
@@ -49,5 +49,5 @@ runs:
         IMAGE_TAG: ${{ steps.prepare-image-tag.outputs.image-tag }}
       shell: bash
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker build -t $ECR_REGISTRY/${ECR_REPOSITORY,,}:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/${ECR_REPOSITORY,,}:$IMAGE_TAG
