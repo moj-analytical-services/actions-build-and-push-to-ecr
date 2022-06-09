@@ -18,6 +18,7 @@ runs:
         role-to-assume: ${{ inputs.role-to-assume }}
         role-skip-session-tagging: true
         role-duration-seconds: 3600
+    - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
     - name: Create Amazon ECR repository if not exists
