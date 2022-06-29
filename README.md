@@ -9,7 +9,7 @@ This Action builds a Docker image it, tags it and pushes it to Amazon ECR.
 ```yaml
 steps:
   - name: Build, tag, and push image to Amazon ECR
-    uses: moj-analytical-services/actions-build-and-push-to-ecr@main
+    uses: moj-analytical-services/actions-build-and-push-to-ecr@v1
     with:
       role-to-assume: arn:aws:iam::123456789012:role/my-role
 ```
