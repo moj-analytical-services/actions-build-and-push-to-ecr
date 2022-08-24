@@ -4,6 +4,9 @@ inputs:
   role-to-assume:
     description: The ARN of the role to assume
     required: true
+  extra_args:
+    description: extra args for docker build
+    required: false
 runs:
   using: composite
   steps:
