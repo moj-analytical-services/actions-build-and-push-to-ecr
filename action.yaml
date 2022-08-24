@@ -53,5 +53,6 @@ runs:
         EXTRA_ARGS: ${{ inputs.extra_args }}
       shell: bash
       run: |
-        docker build $EXTRA_ARGS . -t $ECR_REGISTRY/${ECR_REPOSITORY,,}:$IMAGE_TAG --build-arg DE_ECR=$ECR_REGISTRY 
+        echo $EXTRA_ARGS
+        docker build . -t $ECR_REGISTRY/${ECR_REPOSITORY,,}:$IMAGE_TAG --build-arg DE_ECR=$ECR_REGISTRY $EXTRA_ARGS
         docker push $ECR_REGISTRY/${ECR_REPOSITORY,,}:$IMAGE_TAG
