@@ -49,5 +49,5 @@ runs:
         IMAGE_TAG: ${{ steps.prepare-image-tag.outputs.image-tag }}
       shell: bash
       run: |
-        docker build . -t $ECR_REGISTRY/${ECR_REPOSITORY,,}:$IMAGE_TAG --build-arg DE_ECR=$ECR_REGISTRY
+        docker build . -t $ECR_REGISTRY/${ECR_REPOSITORY,,}:$IMAGE_TAG --build-arg DE_ECR=$ECR_REGISTRY $($EXTRA_ARGS_COMMANDS_ONLY)
         docker push $ECR_REGISTRY/${ECR_REPOSITORY,,}:$IMAGE_TAG
